@@ -145,4 +145,38 @@ input[type="text"] {
   border-radius: 8px;
   border: 1px dashed #ced4da;
 }
+.flashcard {
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 30px 20px;
+  margin: 20px auto;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.flashcard-character, .flashcard-japanese {
+  font-size: 4em;
+  font-weight: bold;
+  color: #343a40;
+  margin-bottom: 10px;
+}
+
+.flashcard-romaji, .flashcard-english {
+  font-size: 1.5em;
+  color: #6c757d;
+  margin-top: 5px;
+}
+
+.flashcard-english {
+  border-top: 1px solid #e9ecef;
+  padding-top: 10px;
+  margin-top: 15px;
+}
 

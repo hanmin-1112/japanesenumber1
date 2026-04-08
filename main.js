@@ -134,10 +134,79 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function startPractice(type, data) {
-    console.log(`Starting practice for: ${type}`);
     const practiceArea = document.getElementById('practice-area');
-    practiceArea.innerHTML = `<h2>${type} Practice</h2><p>Practice content will appear here.</p>`;
-    // Logic for flashcards will go here later
+    let currentCardIndex = 0;
+    let shuffledData = [];
+    let showAnswer = false;
+
+    const shuffleArray = (array) => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    };
+
+    const renderFlashcard = () => {
+      if (shuffledData.length === 0) {
+        practiceArea.innerHTML = `<h2>${type} Practice</h2><p>No items to practice.</p>`;
+        return;
+      }
+
+      const currentItem = shuffledData[currentCardIndex];
+      let cardContent = '';
+
+      if (type === 'Hiragana' || type === 'Katakana') {
+        cardContent = `
+          <div class="flashcard">
+            <div class="flashcard-character">${currentItem.char}</div>
+            <div class="flashcard-romaji" style="display: ${showAnswer ? 'block' : 'none'};">${currentItem.romaji}</div>
+          </div>
+          <button id="show-answer-btn">Show Romaji</button>
+          <button id="next-word-btn">Next Character</button>
+        `;
+      } else if (type === 'JLPT N5 Vocabulary') {
+        cardContent = `
+          <div class="flashcard">
+            <div class="flashcard-japanese">${currentItem.japanese}</div>
+            <div class="flashcard-romaji" style="display: ${showAnswer ? 'block' : 'none'};">${currentItem.romaji}</div>
+            <div class="flashcard-english" style="display: ${showAnswer ? 'block' : 'none'};">${currentItem.english}</div>
+          </div>
+          <button id="show-answer-btn">Show Answer</button>
+          <button id="next-word-btn">Next Word</button>
+        `;
+      }
+      
+      practiceArea.innerHTML = `
+        <h2>${type} Practice</h2>
+        <p>Card ${currentCardIndex + 1} of ${shuffledData.length}</p>
+        ${cardContent}
+      `;
+
+      document.getElementById('show-answer-btn').addEventListener('click', () => {
+        showAnswer = true;
+        renderFlashcard();
+      });
+
+      document.getElementById('next-word-btn').addEventListener('click', () => {
+        showAnswer = false;
+        currentCardIndex++;
+        if (currentCardIndex >= shuffledData.length) {
+          practiceArea.innerHTML = `<h2>${type} Practice</h2><p>Practice complete! You've gone through all ${shuffledData.length} items.</p><button id="restart-practice-btn">Restart Practice</button>`;
+          document.getElementById('restart-practice-btn').addEventListener('click', () => {
+            currentCardIndex = 0;
+            shuffledData = shuffleArray([...data]);
+            renderFlashcard();
+          });
+        } else {
+          renderFlashcard();
+        }
+      });
+    };
+
+    // Initialize practice
+    shuffledData = shuffleArray([...data]); // Use a copy to shuffle
+    renderFlashcard();
   }
 
   function loadContent(section) {
